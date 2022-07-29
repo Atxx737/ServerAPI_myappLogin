@@ -26,7 +26,7 @@ Include API login, logout
   Response:
   ```
     {
-      "message": "You are logged in successfully"
+      "message": "You are logged in successfully", "username":"roy"
     }
   ```
 
