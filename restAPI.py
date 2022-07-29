@@ -12,7 +12,7 @@ def home():
 		username = session['username']
 		return jsonify({'message' : 'You are already logged in', 'username' : username})
 	else:
-		resp = jsonify({'message' : 'Unauthorized'})
+		resp = jsonify({'message' : 'Unauthorized','username' : 'null'})
 		resp.status_code = 401
 		return resp
 
@@ -20,12 +20,12 @@ def home():
 def login():
 	conn = None;
 	cursor = None;
-	print(request.json)
 	try:
 		_json = request.json
 		_username = _json['username']
 		_password = _json['password']
-		
+		print(_json)		
+  
 		# validate the received values
 		if _username and _password:
 			#check user exists			
@@ -43,13 +43,16 @@ def login():
 				# if check_password_hash(row[2], _password):
 				if _password == row[2]:
 					session['username'] = row[1]
-					#cursor.close()
-					#conn.close()
-					return jsonify({'message' : 'You are logged in successfully'})
+					
+					return jsonify({'message' : 'You are logged in successfully', 'username' : row[1]})
 				else:
 					resp = jsonify({'message' : 'Bad Request - invalid password'})
 					resp.status_code = 400
 					return resp
+			else:
+				resp = jsonify({'message' : 'Bad Request - invalid credendtials'})
+				resp.status_code = 400
+				return resp
 		else:
 			resp = jsonify({'message' : 'Bad Request - invalid credendtials'})
 			resp.status_code = 400
@@ -71,3 +74,5 @@ def logout():
 		
 if __name__ == "__main__":
     app.run(host='192.168.1.2', port=5000, debug=True, threaded=True)
+    
+    #192.168.1.2 is IP local server
